@@ -1,0 +1,3 @@
+id: "20200601155337.59999400"
+project-name: knative-spring-boot-new
+stack: docker.io/kabanero/java-spring-boot2:0.3
