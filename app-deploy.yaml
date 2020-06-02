@@ -39,6 +39,7 @@ metadata:
     stack.appsody.dev/tag: docker.io/kabanero/java-spring-boot2:0.3.29
     stack.appsody.dev/title: Spring Boot®
     stack.appsody.dev/url: https://github.com/kabanero-io/collections/tree/master/incubator/java-spring-boot2
+    autoscaling.knative.dev/target: "10"
     summary: Image for Kabanero java-spring-boot2 development
     url: https://access.redhat.com/containers/#/registry.access.redhat.com/ubi8/images/8.1-408
     vcs-ref: 26f36bfa3e3a04c8c866b250924c1aefc34f01c9
@@ -78,7 +79,6 @@ spec:
     timeoutSeconds: 1
   service:
     annotations:
-      autoscaling.knative.dev/target: "10"
       prometheus.io/path: /actuator/prometheus
       prometheus.io/scrape: "true"
     port: 8080
