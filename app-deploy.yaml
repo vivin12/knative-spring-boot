@@ -78,6 +78,7 @@ spec:
     timeoutSeconds: 1
   service:
     annotations:
+      autoscaling.knative.dev/target: "10"
       prometheus.io/path: /actuator/prometheus
       prometheus.io/scrape: "true"
     port: 8080
