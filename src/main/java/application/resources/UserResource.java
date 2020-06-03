@@ -12,8 +12,12 @@ import java.util.Set;
 @RestController
 public class UserResource implements IUserResource {
 
-    @Autowired
     private ApplicationConfig appConfig;
+
+    @Autowired
+    public UserResource(ApplicationConfig appConfig) {
+        this.appConfig = appConfig;
+    }
 
     private static Integer counter = 0;
     private Set<String> names = new HashSet<>();
