@@ -2,6 +2,24 @@
 
 This project was createad using appsody stack which is a developer tool that comes with cloud paks for application product by IBM. The first part "Steps to initialize a project using appsody" is just for folks interested in creating app with appsody stack from scratch. Skip over to "Prerequisites" if you just want to create a knative service using the knative CLI or using the yaml files in this repo. 
 
+## Architecture
+
+This is a pretty simple backend application that has a few API's that you can use to connect to MongoDB and perform some actions on it. 
+
+## MongoDB Local setup and Creating user and collections
+The steps outlined here are for MAC users.
+
+1. `brew tap mongodb/brew`
+2. `brew install mongodb-community`
+3. To start mongodb locally using brew services - `brew services run mongodb-community`
+4. To check the services running - `brew services list`
+5. To open mongo shell - `mongo`
+6. To stop mongodb - `brew services stop mongodb-community`
+
+## MongoDB on Openshift 
+We used the openshift catalog to deploy a single instance of mongoDB. You can follow the below instructions to do the same.
+
+Once the DB instance is up do the following to set up the DB and collections.
 ## Steps to initialize a project using appsody 
 
 To install appsody CLI follow instructions for your OS - https://appsody.dev/docs/installing/installing-appsody/
