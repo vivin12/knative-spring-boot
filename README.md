@@ -9,6 +9,7 @@ This is a pretty simple backend application that has a few API's that you can us
 ## MongoDB Local setup and Creating user and collections
 The steps outlined here are for MAC users.
 
+### Installing and running MongoDB
 1. `brew tap mongodb/brew`
 2. `brew install mongodb-community`
 3. To start mongodb locally using brew services - `brew services run mongodb-community`
@@ -16,10 +17,69 @@ The steps outlined here are for MAC users.
 5. To open mongo shell - `mongo`
 6. To stop mongodb - `brew services stop mongodb-community`
 
-## MongoDB on Openshift 
-We used the openshift catalog to deploy a single instance of mongoDB. You can follow the below instructions to do the same.
+### User, DB and collection setup 
+1. Open mongo shell : `mongo`
+2. Switch to admin DB to create a new user which you can use to connect to the DB from your app : `use admin` 
+3. `db.createUser({user: "admin", pwd :"password", roles : [ {role : "userAdminAnyDatabase", db : "admin"}]});`
+4. Exit out of the shell : `exit`
+5. Login with the new user name : `mongo -u admin -p password`
+6. To see all the DB's : `show dbs`
+7. To create a new DB named books : `use books`
+8. There are mutilple ways to create a collection inside a DB :
 
-Once the DB instance is up do the following to set up the DB and collections.
+   a. To create collection without no parameters and no data : `db.createCollection("book_details")`
+   
+   b. This statment will create a collection and insert the data into it :
+   `db.book_details.insertMany([{ bookName: "War on Normal People", author: "Andrew Yang", publishedYear: 2019}, {bookName: "The Elephant whisperer", author: "Lawrence Anthony", publishedYear: 2009}]);`
+
+
+## MongoDB on Openshift 
+We used the openshift catalog to deploy a single instance of mongoDB. You can follow the below instructions to do the same or if you can create your on deployment yaml files for mongoDB which is not covered in this tutorial.
+
+1. After you deploy mongoDB from the catalog a service will be created and you can view the IP and port that you can use to connect to the DB from within the cluster. If you want to connect to the DB from outside the cluster you can create a loadbalancer service. Below yaml is an example and you can find that in the repo as well 
+
+`vi mongo-yamls/mongo-service.yaml`.  
+
+   ```
+   apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    template.openshift.io/expose-uri: mongodb://{.spec.clusterIP}:{.spec.ports[?(.name=="mongo")].port}
+  labels:
+    template: mongodb-persistent-template
+  name: mongodb-lb
+  namespace: va-dev
+  selfLink: /api/v1/namespaces/va-dev/services/mongodb
+spec:
+  ports:
+  - name: mongo
+    port: 27017
+    protocol: TCP
+    targetPort: 27017
+  selector:
+    name: mongodb
+  sessionAffinity: None
+  type: LoadBalancer
+status:
+  loadBalancer: {}
+   ```
+
+2. Apply the yaml file you created `oc apply -f mongo-service.yaml`
+3. `oc get svc` - You will see that a new service got created with an externalIP and now you should be able to connect to the DB from outside the cluster with that IP. 
+
+### Collection setup on MongoDB on openshift
+If you did setup a loadbalancer service for your mongoDB instance you can setup your DB and collection using a mongodb GUI like MongoDB compass : `https://www.mongodb.com/products/compass`.
+
+Folks who didn't set up a loadbalancer service and can only access the DB instance from within the cluster will need to remote shell into the pod instance of mongoDB to create and setup DB and collections. Steps for that are outlined below. 
+
+1. `oc get pods` 
+2. `oc rsh "pod name"`
+3. If you want to see all the DB’s and users you need to login as admin : `mongo -u admin -p password admin`
+4. When you created the DB instance using the catalog you created a DB along with it named `books` so we will login into that to create a collection inside it : `mongo -u admin -p password books`
+5. create books_details collection with no parameters - `db.createCollection("book_details");`
+6. We will not add any data to the collection since we have REST api's in the app to do that.
+
 ## Steps to initialize a project using appsody 
 
 To install appsody CLI follow instructions for your OS - https://appsody.dev/docs/installing/installing-appsody/
