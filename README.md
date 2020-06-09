@@ -4,7 +4,7 @@ This project was createad using appsody stack which is a developer tool that com
 
 ## Architecture
 
-This is a pretty simple backend application that has a few API's that you can use to connect to MongoDB and perform some actions on it. 
+This is a pretty simple backend application that has a few API's that you can use to connect to MongoDB and perform CRUD operations on it. 
 
 ## MongoDB Local setup and Creating user and collections
 The steps outlined here are for MAC users.
@@ -41,7 +41,7 @@ We used the openshift catalog to deploy a single instance of mongoDB. You can fo
     `vi mongo-yamls/mongo-service.yaml`.  
 
       ```
-         apiVersion: v1
+      apiVersion: v1
       kind: Service
       metadata:
         annotations:
