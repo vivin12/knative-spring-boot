@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    template.openshift.io/expose-uri: mongodb://{.spec.clusterIP}:{.spec.ports[?(.name=="mongo")].port}
+  labels:
+    template: mongodb-persistent-template
+  name: mongodb-lb
+  namespace: va-dev
+  selfLink: /api/v1/namespaces/va-dev/services/mongodb
+spec:
+  ports:
+  - name: mongo
+    port: 27017
+    protocol: TCP
+    targetPort: 27017
+  selector:
+    name: mongodb
+  sessionAffinity: None
+  type: LoadBalancer
+status:
+  loadBalancer: {}

@@ -54,7 +54,7 @@ metadata:
   name: knative-spring-boot-new
   namespace: va-dev
 spec:
-  applicationImage: dev.local/knative-spring-boot-new
+  applicationImage: dev.local/knative-springboot-appsody
   createKnativeService: true
   expose: true
   livenessProbe:
