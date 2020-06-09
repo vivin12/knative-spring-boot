@@ -38,32 +38,32 @@ We used the openshift catalog to deploy a single instance of mongoDB. You can fo
 
 1. After you deploy mongoDB from the catalog a service will be created and you can view the IP and port that you can use to connect to the DB from within the cluster. If you want to connect to the DB from outside the cluster you can create a loadbalancer service. Below yaml is an example and you can find that in the repo as well 
 
-`vi mongo-yamls/mongo-service.yaml`.  
+    `vi mongo-yamls/mongo-service.yaml`.  
 
-   ```
-   apiVersion: v1
-kind: Service
-metadata:
-  annotations:
-    template.openshift.io/expose-uri: mongodb://{.spec.clusterIP}:{.spec.ports[?(.name=="mongo")].port}
-  labels:
-    template: mongodb-persistent-template
-  name: mongodb-lb
-  namespace: va-dev
-  selfLink: /api/v1/namespaces/va-dev/services/mongodb
-spec:
-  ports:
-  - name: mongo
-    port: 27017
-    protocol: TCP
-    targetPort: 27017
-  selector:
-    name: mongodb
-  sessionAffinity: None
-  type: LoadBalancer
-status:
-  loadBalancer: {}
-   ```
+      ```
+         apiVersion: v1
+      kind: Service
+      metadata:
+        annotations:
+          template.openshift.io/expose-uri: mongodb://{.spec.clusterIP}:{.spec.ports[?(.name=="mongo")].port}
+        labels:
+          template: mongodb-persistent-template
+        name: mongodb-lb
+        namespace: va-dev
+        selfLink: /api/v1/namespaces/va-dev/services/mongodb
+      spec:
+        ports:
+        - name: mongo
+          port: 27017
+          protocol: TCP
+          targetPort: 27017
+        selector:
+          name: mongodb
+        sessionAffinity: None
+        type: LoadBalancer
+      status:
+        loadBalancer: {}
+      ```
 
 2. Apply the yaml file you created `oc apply -f mongo-service.yaml`
 3. `oc get svc` - You will see that a new service got created with an externalIP and now you should be able to connect to the DB from outside the cluster with that IP. 
